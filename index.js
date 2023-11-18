@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-const ObjectId = require('mongodb').ObjectId;
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const { ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -46,6 +46,14 @@ async function run() {
             res.send(allPosts);
         });
 
+        // Deleting post based on ID
+        app.delete('/posts/:_id', async (req, res) => {
+            const _id = req.params._id;
+            const filter = { _id: new ObjectId(_id) };
+            const result = await postCollection.deleteOne(filter);
+            res.send(result);
+        })
+
         // Post Comments
         app.post('/postComment', async (req, res) => {
             const comment = req.body;
@@ -66,6 +74,14 @@ async function run() {
             const comment = await commentsCollection.find(query).toArray()
             res.send(comment)
         });
+
+        // Deleting comment based on ID
+        app.delete('/comment/:_id', async (req, res) => {
+            const _id = req.params._id;
+            const filter = { _id: new ObjectId(_id) };
+            const result = await commentsCollection.deleteOne(filter);
+            res.send(result);
+        })
 
     }
 
