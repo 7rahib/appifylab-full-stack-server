@@ -143,7 +143,7 @@ app.get('/', (req, res) => {
 })
 
 app.listen(port, () => {
-    console.log(`Appifylab Social app listening on port ${port}`)
+    console.log(`Appifylab Social Site listening on port ${port}`)
 })
 
 
