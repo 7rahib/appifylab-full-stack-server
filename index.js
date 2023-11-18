@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
+const ObjectId = require('mongodb').ObjectId;
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
@@ -23,13 +24,53 @@ async function run() {
     try {
         await client.connect();
         const userCollection = client.db('appifylab_social').collection('users');
+        const postCollection = client.db('appifylab_social').collection('posts');
+        const commentsCollection = client.db('appifylab_social').collection('comments');
 
         app.get('/users', async (req, res) => {
             const users = await userCollection.find().toArray();
             res.send(users);
-        })
+        });
 
-    } finally {
+
+        // Adding new posts
+        app.post('/createpost', async (req, res) => {
+            const post = req.body;
+            const result = await postCollection.insertOne(post);
+            res.send(result);
+        });
+
+        // Getting all post data
+        app.get('/posts', async (req, res) => {
+            const allPosts = await postCollection.find().toArray();
+            res.send(allPosts);
+        });
+
+        // Post Comments
+        app.post('/postComment', async (req, res) => {
+            const comment = req.body;
+            const result = await commentsCollection.insertOne(comment);
+            res.send(result);
+        });
+
+        // Getting all comment data
+        app.get('/comments', async (req, res) => {
+            const allComments = await commentsCollection.find().toArray();
+            res.send(allComments);
+        });
+
+        // Getting comments based on post id
+        app.get('/comment/:_id', async (req, res) => {
+            const _id = req.params._id
+            const query = { postId: _id }
+            const comment = await commentsCollection.find(query).toArray()
+            res.send(comment)
+        });
+
+    }
+
+    finally {
+
     }
 }
 
