@@ -83,6 +83,52 @@ async function run() {
             res.send(result);
         })
 
+        // Adding Like to a Post
+        app.put('/post/like/:_id', async (req, res) => {
+            const _id = req.params._id;
+            const filter = { _id: new ObjectId(_id) };
+            const updateDoc = {
+                $set: { role: 'like' },
+            };
+            const result = await postCollection.updateOne(filter, updateDoc);
+            res.send(result);
+        })
+
+        // Removing Like from a Post
+        app.put('/post/removeLike/:_id', async (req, res) => {
+            const _id = req.params._id;
+            const filter = { _id: new ObjectId(_id) };
+            const updateDoc = {
+                $set: { role: '' },
+            };
+            const result = await postCollection.updateOne(filter, updateDoc);
+            res.send(result);
+        })
+
+
+
+        // Adding Like to a comment
+        app.put('/comment/like/:_id', async (req, res) => {
+            const _id = req.params._id;
+            const filter = { _id: new ObjectId(_id) };
+            const updateDoc = {
+                $set: { role: 'like' },
+            };
+            const result = await commentsCollection.updateOne(filter, updateDoc);
+            res.send(result);
+        })
+
+        // Removing Like from a comment
+        app.put('/comment/removeLike/:_id', async (req, res) => {
+            const _id = req.params._id;
+            const filter = { _id: new ObjectId(_id) };
+            const updateDoc = {
+                $set: { role: '' },
+            };
+            const result = await commentsCollection.updateOne(filter, updateDoc);
+            res.send(result);
+        })
+
     }
 
     finally {
